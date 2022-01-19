@@ -1,14 +1,28 @@
+SRCS := $(wildcard *.c)
+OBJDIR = .build
+OBJS := $(SRCS:%.c=$(OBJDIR)/%.o)
 
-CC=gcc
-CFLAGS=-Wall -g
+DEPDIR = .dep
+DEPS := $(SRCS:%.c=$(DEPDIR)/%.d)
+DEPFLAGS = -MT $@ -MMD -MP -MF $(DEPDIR)/$*.d
 
-all: mainapp
+.PHONY: clean
+TARGET = out
 
-mainapp: main.c %.o
-	$(CC) $(CFLAGS) -o $@ $^
+$(OBJDIR)/%.o: %.c | $(OBJDIR) $(DEPDIR)
+	@echo [CC] $@
+	@$(CC) -c $(CFLAGS) $(DEPFLAGS) -o $@ $<
 
-%.o: %.c %.h
-	$(CC) $(CFLAGS) -c $^
+$(TARGET): $(OBJS)
+	@echo [LD] $@
+	@$(CC) $(LDFLAGS) -o $@ $^
 
 clean:
-	rm a.out *.o mainapp
+	@rm -rf $(OBJDIR) $(DEPDIR) $(TARGET)
+
+$(OBJDIR) $(DEPDIR):
+	@mkdir -p $@
+
+$(DEPFILES):
+
+include $(wildcard $(DEPFILES))

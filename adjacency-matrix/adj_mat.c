@@ -60,9 +60,18 @@ void print_graph(graph *g) {
 }
 
 bool add_edge(graph *g, unsigned int from_node, unsigned int to_node) {
-  return false;
+  assert(g != NULL);
+  assert(from_node < g->numnodes);
+  assert(to_node < g->numnodes);
+  if (has_edge(g, from_node, to_node))
+    return false;
+  g->edges[from_node][to_node] = true;
+  return true;
 }
 
 bool has_edge(graph *g, unsigned int from_node, unsigned int to_node) {
-  return false;
+  assert(g != NULL);
+  assert(from_node < g->numnodes);
+  assert(to_node < g->numnodes);
+  return g->edges[from_node][to_node];
 }
