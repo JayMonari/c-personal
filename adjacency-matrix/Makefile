@@ -17,6 +17,9 @@ $(TARGET): $(OBJS)
 	@echo [LD] $@
 	@$(CC) $(LDFLAGS) -o $@ $^
 
+vis: $(TARGET)
+	./$(TARGET) | dot -Tpdf > vis.pdf
+
 clean:
 	@rm -rf $(OBJDIR) $(DEPDIR) $(TARGET)
 
